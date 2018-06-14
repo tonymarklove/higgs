@@ -1,0 +1,107 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://tileset.png" type="Texture" id=1]
+
+[node name="Node2D" type="Node2D" index="0"]
+
+[node name="wall" type="Sprite" parent="." index="0"]
+
+position = Vector2( 25, 25 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 50, 50 )
+_sections_unfolded = [ "Region" ]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="wall" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="wall/StaticBody2D" index="0"]
+
+build_mode = 0
+polygon = PoolVector2Array( -25, -25, 25, -25, 25, 25, -25, 25 )
+
+[node name="floor" type="Sprite" parent="." index="1"]
+
+position = Vector2( 95, 25 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 50, 0, 50, 50 )
+_sections_unfolded = [ "Region" ]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="floor" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="floor/StaticBody2D" index="0"]
+
+build_mode = 0
+polygon = PoolVector2Array( -25, -25, 25, -25, 25, 25, -25, 25 )
+
+[node name="slope_up" type="Sprite" parent="." index="2"]
+
+position = Vector2( 165, 25 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 101, 0, 50, 50 )
+_sections_unfolded = [ "Region" ]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="slope_up" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="slope_up/StaticBody2D" index="0"]
+
+build_mode = 0
+polygon = PoolVector2Array( -25, 25, 25, -25, 25, 25, -25, 25 )
+
+[node name="slope_down" type="Sprite" parent="." index="3"]
+
+position = Vector2( 235, 25 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 149, 0, 50, 50 )
+_sections_unfolded = [ "Region" ]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="slope_down" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="slope_down/StaticBody2D" index="0"]
+
+build_mode = 0
+polygon = PoolVector2Array( -25, -25, 25, 25, -25, 25 )
+
+[node name="background" type="Sprite" parent="." index="4"]
+
+position = Vector2( 305, 25 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 200, 0, 50, 50 )
+_sections_unfolded = [ "Region" ]
+
+
