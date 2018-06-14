@@ -2,21 +2,27 @@ extends KinematicBody2D
 
 export (int) var SPEED
 
-func _process(delta):
-	var velocity = Vector2() # the player's movement vector
-	if Input.is_action_pressed("ui_right"):
-		velocity.x += 1
-	if Input.is_action_pressed("ui_left"):
-		velocity.x -= 1
-	if Input.is_action_pressed("ui_down"):
-		velocity.y += 1
-	if Input.is_action_pressed("ui_up"):
-		velocity.y -= 1
-	if velocity.length() > 0:
-		velocity = velocity.normalized() * SPEED
+var run_speed = 350
+var jump_speed = -1000
+var gravity = 2500
 
-	var collision_info = move_and_collide(velocity * delta)
+var velocity = Vector2()
 
-	if collision_info:
-		velocity = velocity.bounce(collision_info.normal)
+func get_input():
+	velocity.x = 0
+	var right = Input.is_action_pressed('ui_right')
+	var left = Input.is_action_pressed('ui_left')
+	var jump = Input.is_action_just_pressed('ui_select')
+
+	if is_on_floor() and jump:
+		velocity.y = jump_speed
+	if right:
+		velocity.x += run_speed
+	if left:
+		velocity.x -= run_speed
+
+func _physics_process(delta):
+	velocity.y += gravity * delta
+	get_input()
+	velocity = move_and_slide(velocity, Vector2(0, -1))
 	
