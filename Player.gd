@@ -20,7 +20,12 @@ func get_input():
 		velocity.x += run_speed
 	if left:
 		velocity.x -= run_speed
-
+		
+	if abs(velocity.x) > 0:
+		$AnimatedSprite.play()
+	else:
+		$AnimatedSprite.stop()
+		
 func _physics_process(delta):
 	velocity.y += gravity * delta
 	get_input()
