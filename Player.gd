@@ -78,6 +78,7 @@ func get_input():
 	var x_frac = player_right_direction.dot(Vector2(1,0))
 	var y_frac = player_right_direction.dot(Vector2(0,-1))
 
+	# Stop player movement from previous the frame along the walk axis
 	velocity.x *= 1 - abs(x_frac)
 	velocity.y *= 1 - abs(y_frac)
 
@@ -89,14 +90,26 @@ func get_input():
 
 	if is_on_floor() and jump:
 		velocity += gravity_vector() * jump_speed
+
+	var control_direction = Vector2(0,0)
+
+	if right:
+		control_direction.x = 1 * abs(x_frac)
+	if left:
+		control_direction.x = -1 * abs(x_frac)
+	if up:
+		control_direction.y = -1 * abs(y_frac)
+	if down:
+		control_direction.y = 1 * abs(y_frac)
+
+	velocity += control_direction * run_speed
+			
 	if right:
 		$AnimatedSprite.flip_h = false
-		velocity += player_right_direction * run_speed
 	if left:
 		$AnimatedSprite.flip_h = true
-		velocity -= player_right_direction * run_speed
-
-	var walking = left || right
+		
+	var walking = left || right || up || down
 
 	if walking:
 		$AnimatedSprite.play()
