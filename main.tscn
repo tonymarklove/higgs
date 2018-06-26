@@ -31,8 +31,10 @@ __meta__ = {
 
 [node name="Player" parent="." index="1" instance=ExtResource( 2 )]
 
-rotate_to_follow_gravity = false
+editor/display_folded = true
+rotate_to_follow_gravity = true
 rotate_camera_with_player = false
+player_relative_controls = false
 
 [node name="Camera2D" type="Camera2D" parent="Player" index="2"]
 
