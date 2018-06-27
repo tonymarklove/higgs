@@ -11,6 +11,11 @@ const GRAVITY_DIRECTIONS = [
 	Vector2(-1,0)
 ]
 
+enum {
+	GRAVMODE_DIRECTION,
+	GRAVMODE_JUMP
+}
+
 var run_speed = 500
 var jump_speed = -1500
 var gravity = 5000
@@ -22,6 +27,8 @@ var gravity_direction = 0
 var game_time = 0
 var rotation_at_gravity_change = 0
 var last_gravity_change_time = 0
+
+var gravity_mode = GRAVMODE_JUMP
 
 var gravity_jump_charge = 0.0
 var gravity_jump_maximum_time = 0.5
@@ -97,6 +104,15 @@ func movement_option():
 	else:
 		return fixed_camera_movement()
 
+func gravity_direction_select():
+	if player_relative_controls || rotate_camera_with_player:
+		rotating_camera_gravity_select()
+	else:
+		fixed_camera_gravity_select()
+
+func gravity_jump():
+	pass
+
 func get_input():
 	var player_right_direction = gravity_vector().tangent()
 
@@ -106,11 +122,6 @@ func get_input():
 	# Stop player movement from previous the frame along the walk axis
 	velocity.x *= 1 - abs(x_frac)
 	velocity.y *= 1 - abs(y_frac)
-
-	var jump = Input.is_action_just_pressed('ui_select')
-
-	if is_on_floor() and jump:
-		velocity += gravity_vector() * jump_speed
 
 	var move = movement_option()
 
@@ -126,10 +137,17 @@ func get_input():
 		$AnimatedSprite.stop()
 		$AnimatedSprite.frame = 0
 
-	if player_relative_controls || rotate_camera_with_player:
-		rotating_camera_gravity_select()
-	else:
-		fixed_camera_gravity_select()
+	match gravity_mode:
+		GRAVMODE_DIRECTION:
+			var jump = Input.is_action_just_pressed('ui_select')
+
+			if is_on_floor() and jump:
+				velocity += gravity_vector() * jump_speed
+				
+			gravity_direction_select()
+
+		GRAVMODE_JUMP:
+			gravity_jump()
 
 func rotate_to_gravity():
 	var desired_rotation = -gravity_vector().angle_to(Vector2(0,1))
