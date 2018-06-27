@@ -72,6 +72,31 @@ func fixed_camera_gravity_select():
 	if Input.is_action_just_pressed('gravity_down'):
 		gravity_select(0)
 
+func rotating_camera_movement():
+	var right = 1 if Input.is_action_pressed('ui_right') else 0
+	var left = 1 if Input.is_action_pressed('ui_left') else 0
+
+	return (right - left)
+
+func fixed_camera_movement():
+	var player_right_direction = gravity_vector().tangent()
+
+	var x_frac = player_right_direction.dot(Vector2(1,0))
+	var y_frac = player_right_direction.dot(Vector2(0,-1))
+
+	var right = 1 if Input.is_action_pressed('ui_right') else 0
+	var left = 1 if Input.is_action_pressed('ui_left') else 0
+	var up = 1 if Input.is_action_pressed('ui_up') else 0
+	var down = 1 if Input.is_action_pressed('ui_down') else 0
+
+	return ((right * x_frac) - (left * x_frac) + (up * y_frac) - (down * y_frac))
+
+func movement_option():
+	if player_relative_controls || rotate_camera_with_player:
+		return rotating_camera_movement()
+	else:
+		return fixed_camera_movement()
+
 func get_input():
 	var player_right_direction = gravity_vector().tangent()
 
@@ -82,37 +107,21 @@ func get_input():
 	velocity.x *= 1 - abs(x_frac)
 	velocity.y *= 1 - abs(y_frac)
 
-	var right = Input.is_action_pressed('ui_right')
-	var left = Input.is_action_pressed('ui_left')
-	var up = Input.is_action_pressed('ui_up')
-	var down = Input.is_action_pressed('ui_down')
 	var jump = Input.is_action_just_pressed('ui_select')
 
 	if is_on_floor() and jump:
 		velocity += gravity_vector() * jump_speed
 
-	var control_direction = Vector2(0,0)
+	var move = movement_option()
 
-	if right:
-		control_direction.x = 1 * abs(x_frac)
-	if left:
-		control_direction.x = -1 * abs(x_frac)
-	if up:
-		control_direction.y = -1 * abs(y_frac)
-	if down:
-		control_direction.y = 1 * abs(y_frac)
+	velocity += player_right_direction * move * run_speed
 
-	velocity += control_direction * run_speed
-			
-	if right:
-		$AnimatedSprite.flip_h = false
-	if left:
-		$AnimatedSprite.flip_h = true
-		
-	var walking = left || right || up || down
-
-	if walking:
+	if move > 0:
 		$AnimatedSprite.play()
+		$AnimatedSprite.flip_h = false
+	elif move < 0:
+		$AnimatedSprite.play()
+		$AnimatedSprite.flip_h = true
 	else:
 		$AnimatedSprite.stop()
 		$AnimatedSprite.frame = 0
