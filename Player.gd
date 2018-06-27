@@ -28,7 +28,7 @@ var game_time = 0
 var rotation_at_gravity_change = 0
 var last_gravity_change_time = 0
 
-var gravity_mode = GRAVMODE_JUMP
+var gravity_mode = GRAVMODE_DIRECTION
 
 var gravity_jump_charge = 0.0
 var gravity_jump_maximum_time = 0.5
