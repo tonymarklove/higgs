@@ -19,7 +19,7 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[node name="Player" type="KinematicBody2D" index="0"]
+[node name="Player" type="KinematicBody2D"]
 
 position = Vector2( 210, 400 )
 input_pickable = true
@@ -27,7 +27,9 @@ collision_layer = 1
 collision_mask = 1
 collision/safe_margin = 0.08
 script = ExtResource( 1 )
-SPEED = 400
+rotate_to_follow_gravity = true
+rotate_camera_with_player = false
+player_relative_controls = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
 

@@ -4,6 +4,8 @@ export var rotate_to_follow_gravity = true
 export var rotate_camera_with_player = false
 export var player_relative_controls = false
 
+signal jump_charge_changed(value)
+
 const GRAVITY_DIRECTIONS = [
 	Vector2(0,1),
 	Vector2(1,0),
@@ -28,9 +30,9 @@ var game_time = 0
 var rotation_at_gravity_change = 0
 var last_gravity_change_time = 0
 
-var gravity_mode = GRAVMODE_DIRECTION
+var gravity_mode = GRAVMODE_JUMP
 
-var gravity_jump_charge = 0.0
+var gravity_jump_charge = 0
 var gravity_jump_maximum_time = 0.5
 var gravity_jump_start_time = 0
 
@@ -111,7 +113,11 @@ func gravity_direction_select():
 		fixed_camera_gravity_select()
 
 func gravity_jump():
-	pass
+	var jump = Input.is_action_pressed('ui_select')
+
+	if jump:
+		gravity_jump_charge += 2
+		emit_signal("jump_charge_changed", gravity_jump_charge)
 
 func get_input():
 	var player_right_direction = gravity_vector().tangent()
