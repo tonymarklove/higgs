@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-export var rotate_to_follow_gravity = true
+export var rotate_to_follow_gravity = false
 export var rotate_camera_with_player = false
 export var player_relative_controls = false
 
@@ -18,9 +18,15 @@ enum {
 	GRAVMODE_JUMP
 }
 
+enum {
+	GRAVJUMP_HELD,
+	GRAVJUMP_RELEASED,
+	GRAVJUMP_USED
+}
+
 var run_speed = 500
 var jump_speed = -1500
-var gravity = 5000
+var gravity_strength = 5000
 var rotation_time = 0.5
 
 var velocity = Vector2()
@@ -31,10 +37,10 @@ var rotation_at_gravity_change = 0
 var last_gravity_change_time = 0
 
 var gravity_mode = GRAVMODE_JUMP
+var gravity_jump_action = GRAVJUMP_RELEASED
 
-var gravity_jump_charge = 0
-var gravity_jump_maximum_time = 0.5
-var gravity_jump_start_time = 0
+var gravity_jump_charge = 1.0
+const GRAVITY_JUMP_MAXIMUM_TIME = 0.5
 
 func clamp_and_normalize(input, a, b):
 	return clamp(input, a, b) / (b - a)
@@ -112,14 +118,36 @@ func gravity_direction_select():
 	else:
 		fixed_camera_gravity_select()
 
-func gravity_jump():
+func gravity_jump(delta):
 	var jump = Input.is_action_pressed('ui_select')
 
-	if jump:
-		gravity_jump_charge += 2
-		emit_signal("jump_charge_changed", gravity_jump_charge)
+	var change_in_charge = clamp(delta / GRAVITY_JUMP_MAXIMUM_TIME, 0, 1)
 
-func get_input():
+	if gravity_jump_action == GRAVJUMP_HELD:
+		if jump:
+			if gravity_jump_charge < 0.01:
+				gravity_jump_action = GRAVJUMP_USED
+				gravity_select(gravity_index_from_offset(2))
+			else:
+				gravity_jump_charge = clamp(gravity_jump_charge - change_in_charge, 0, 1)
+		else:
+			gravity_jump_action = GRAVJUMP_RELEASED
+			gravity_select(gravity_index_from_offset(2))
+	elif gravity_jump_action == GRAVJUMP_RELEASED:
+		if jump:
+			gravity_jump_action = GRAVJUMP_HELD
+			gravity_select(gravity_index_from_offset(2))
+			gravity_jump_charge = clamp(gravity_jump_charge - change_in_charge, 0, 1)
+	else:
+		if !jump:
+			gravity_jump_action = GRAVJUMP_RELEASED
+
+	if is_on_floor():
+		gravity_jump_charge = clamp(gravity_jump_charge + change_in_charge, 0, 1)
+
+	emit_signal("jump_charge_changed", gravity_jump_charge)
+
+func get_input(delta):
 	var player_right_direction = gravity_vector().tangent()
 
 	var x_frac = player_right_direction.dot(Vector2(1,0))
@@ -153,7 +181,7 @@ func get_input():
 			gravity_direction_select()
 
 		GRAVMODE_JUMP:
-			gravity_jump()
+			gravity_jump(delta)
 
 func rotate_to_gravity():
 	var desired_rotation = -gravity_vector().angle_to(Vector2(0,1))
@@ -174,8 +202,8 @@ func _physics_process(delta):
 
 	$Camera2D.rotating = rotate_camera_with_player
 
-	velocity += gravity_vector() * gravity * delta
-	get_input()
+	get_input(delta)
+	velocity += gravity_vector() * gravity_strength * delta
 	velocity = move_and_slide(velocity, -gravity_vector())
 
 	if rotate_to_follow_gravity:
