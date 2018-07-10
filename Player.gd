@@ -208,3 +208,7 @@ func _physics_process(delta):
 
 	if rotate_to_follow_gravity:
 		rotate_to_gravity()
+
+
+func _on_Doorway_body_entered(body):
+	get_tree().change_scene("res://Level_1_1.tscn")
