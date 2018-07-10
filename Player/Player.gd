@@ -209,6 +209,21 @@ func _physics_process(delta):
 	if rotate_to_follow_gravity:
 		rotate_to_gravity()
 
-
 func _on_Doorway_body_entered(body):
-	get_tree().change_scene("res://Level_1_1.tscn")
+	goto_scene("res://Levels/Level_1_2.tscn")
+
+func goto_scene(path):
+	call_deferred("_deferred_goto_scene", path)
+
+func _deferred_goto_scene(path):
+	# Load new scene.
+	var s = ResourceLoader.load(path)
+	var new_scene = s.instance()
+
+	# Add it to the active scene, as child of root.
+	var level_node = get_node("/root/Node/Level")
+	var parent = level_node.get_parent()
+
+	level_node.free()
+
+	parent.add_child(new_scene)

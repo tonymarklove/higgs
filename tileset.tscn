@@ -93,6 +93,7 @@ bounce = 0.0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="slope_down/StaticBody2D" index="0"]
 
+position = Vector2( -0.902466, 0 )
 build_mode = 0
 polygon = PoolVector2Array( -25, -25, 25, 25, -25, 25 )
 
@@ -102,6 +103,22 @@ position = Vector2( 305, 25 )
 texture = ExtResource( 1 )
 region_enabled = true
 region_rect = Rect2( 200, 0, 50, 50 )
+_sections_unfolded = [ "Region" ]
+
+[node name="door_top" type="Sprite" parent="." index="5"]
+
+position = Vector2( 369.313, 24.892 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 250, 0, 50, 50 )
+_sections_unfolded = [ "Region" ]
+
+[node name="door_bottom" type="Sprite" parent="." index="6"]
+
+position = Vector2( 429.721, 25.1298 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 300, 0, 50, 50 )
 _sections_unfolded = [ "Region" ]
 
 
