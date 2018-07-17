@@ -13,6 +13,10 @@ config_version=3
 config/name="higgs"
 run/main_scene="res://main.tscn"
 
+[autoload]
+
+Global="*res://Globals/Global.gd"
+
 [display]
 
 window/size/width=1280
