@@ -10,6 +10,8 @@
 
 [node name="Player" parent="." index="1" instance=ExtResource( 2 )]
 
+z_index = 1
+_sections_unfolded = [ "Z Index" ]
 rotate_to_follow_gravity = false
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." index="2"]

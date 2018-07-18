@@ -159,6 +159,12 @@ func get_input(delta):
 
 	var move = movement_option()
 
+	if Input.is_action_pressed('ui_up'):
+		for doorway in get_tree().get_nodes_in_group("doorways"):
+			if doorway.overlaps_body(self):
+				doorway.use_door()
+				break
+
 	velocity += player_right_direction * move * run_speed
 
 	if move > 0:

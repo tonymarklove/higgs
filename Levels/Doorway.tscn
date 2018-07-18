@@ -7,7 +7,9 @@
 custom_solver_bias = 0.0
 extents = Vector2( 10, 10 )
 
-[node name="Doorway" type="Area2D"]
+[node name="Doorway" type="Area2D" groups=[
+"doorways",
+]]
 
 editor/display_folded = true
 position = Vector2( 1740.03, 436.811 )
@@ -20,11 +22,10 @@ audio_bus_override = false
 audio_bus_name = "Master"
 script = ExtResource( 1 )
 scene_to_load = "res://Levels/Level_1_2.tscn"
+teleport_to_location = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
 
 shape = SubResource( 1 )
-
-[connection signal="body_entered" from="." to="." method="_on_Doorway_body_entered"]
 
 
