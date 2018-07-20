@@ -5,7 +5,7 @@
 [ext_resource path="res://Player/light.png" type="Texture" id=3]
 [ext_resource path="res://Gui/GUI.tscn" type="PackedScene" id=4]
 
-[node name="Node" type="Node"]
+[node name="Node" type="Node" index="0"]
 
 [node name="Level" parent="." index="0" instance=ExtResource( 1 )]
 
@@ -13,7 +13,6 @@
 
 z_index = 1
 _sections_unfolded = [ "Z Index" ]
-rotate_to_follow_gravity = false
 
 [node name="Light2D" type="Light2D" parent="Player" index="3"]
 
@@ -21,15 +20,15 @@ enabled = true
 editor_only = false
 texture = ExtResource( 3 )
 offset = Vector2( 0, 0 )
-texture_scale = 2.0
+texture_scale = 3.0
 color = Color( 1, 1, 1, 1 )
-energy = 1.0
+energy = 0.5
 mode = 0
 range_height = 0.0
 range_z_min = -1024
 range_z_max = 1024
-range_layer_min = -2
-range_layer_max = 2
+range_layer_min = -1
+range_layer_max = 1
 range_item_cull_mask = 1
 shadow_enabled = false
 shadow_color = Color( 0, 0, 0, 0.5 )
@@ -38,7 +37,7 @@ shadow_gradient_length = 0.0
 shadow_filter = 0
 shadow_filter_smooth = 0.0
 shadow_item_cull_mask = 1
-_sections_unfolded = [ "Shadow" ]
+_sections_unfolded = [ "Range", "Shadow" ]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." index="2"]
 
@@ -53,10 +52,6 @@ transform = Transform2D( 1, 0, 0, 1, 0, 0 )
 
 margin_right = 652.0
 margin_bottom = 84.0
-
-[node name="CanvasModulate" type="CanvasModulate" parent="." index="3"]
-
-color = Color( 0, 0, 0, 1 )
 
 [connection signal="jump_charge_changed" from="Player" to="CanvasLayer/GUI" method="_on_Player_jump_charge_changed"]
 
