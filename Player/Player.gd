@@ -6,6 +6,8 @@ export var player_relative_controls = false
 
 signal jump_charge_changed(value)
 
+var smoke_emitter = preload("res://Particles/SmokePuff.tscn")
+
 const GRAVITY_DIRECTIONS = [
 	Vector2(0,1),
 	Vector2(1,0),
@@ -41,6 +43,7 @@ var gravity_jump_action = GRAVJUMP_RELEASED
 
 var gravity_jump_charge = 1.0
 const GRAVITY_JUMP_MAXIMUM_TIME = 0.5
+const MAX_SAFE_IMPACT_SPEED = 50
 
 var on_wall = false
 var on_floor = false
@@ -245,12 +248,20 @@ func move_and_slide(linear_velocity, floor_normal=Vector2(), slope_stop_min_velo
 
 		if !collision: break
 
+		var collision_velocity = (collision.collider_velocity - motion).slide(collision.normal.tangent()).length()
+
+		if collision_velocity > 30:
+			var smoke = smoke_emitter.instance()
+			smoke.position = collision.position
+			smoke.emitting = true
+			get_node("/root/Node").add_child(smoke)
+
 		var cos_max_floor_angle = cos(floor_max_angle)
 		var floor_collision_dot = collision.normal.dot(floor_normal)
 		var ceiling_collision_dot = -floor_collision_dot
 
 		if floor_collision_dot >= cos_max_floor_angle:
-			# On floor
+			# On floor. Do some extra work to stick to moving floors.
 			self.on_floor = true
 			floor_velocity = collision.collider_velocity
 

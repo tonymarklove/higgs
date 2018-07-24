@@ -19,7 +19,7 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[node name="Player" type="KinematicBody2D"]
+[node name="Player" type="KinematicBody2D" index="0"]
 
 position = Vector2( 210, 400 )
 input_pickable = true
@@ -55,7 +55,7 @@ limit_bottom = 10000000
 limit_smoothed = false
 drag_margin_h_enabled = true
 drag_margin_v_enabled = true
-smoothing_enabled = true
+smoothing_enabled = false
 smoothing_speed = 5.0
 offset_v = 0.0
 offset_h = 0.0
