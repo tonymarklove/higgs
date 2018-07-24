@@ -185,13 +185,13 @@ func get_input(delta):
 	velocity += player_right_direction * move * run_speed
 
 	if move > 0:
-		$AnimatedSprite.play()
+		$AnimatedSprite.play("walk")
 		$AnimatedSprite.flip_h = false
 	elif move < 0:
-		$AnimatedSprite.play()
+		$AnimatedSprite.play("walk")
 		$AnimatedSprite.flip_h = true
 	else:
-		$AnimatedSprite.stop()
+		$AnimatedSprite.play("idle")
 		$AnimatedSprite.frame = 0
 
 	match gravity_mode:
