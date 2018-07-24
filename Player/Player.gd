@@ -50,6 +50,8 @@ var on_floor = false
 var on_ceiling = false
 var floor_velocity = Vector2()
 
+var health = 5
+
 func is_on_floor():
 	return self.on_floor
 
@@ -164,7 +166,7 @@ func gravity_jump(delta):
 
 	emit_signal("jump_charge_changed", gravity_jump_charge)
 
-func get_input(delta):
+func stop_controlled_movement():
 	var player_right_direction = gravity_vector().tangent()
 
 	var x_frac = player_right_direction.dot(Vector2(1,0))
@@ -174,6 +176,8 @@ func get_input(delta):
 	velocity.x *= 1 - abs(x_frac)
 	velocity.y *= 1 - abs(y_frac)
 
+func get_input(delta):
+	var player_right_direction = gravity_vector().tangent()
 	var move = movement_option()
 
 	if Input.is_action_pressed('ui_up'):
@@ -227,7 +231,13 @@ func _physics_process(delta):
 
 	var floor_normal = -gravity_vector() if gravity_mode == GRAVMODE_DIRECTION else Vector2(0,-1)
 
-	get_input(delta)
+	stop_controlled_movement()
+
+	if health > 0:
+		get_input(delta)
+	else:
+		$AnimatedSprite.play("dead")
+
 	velocity += gravity_vector() * gravity_strength * delta
 	velocity = move_and_slide(velocity, floor_normal)
 
@@ -255,6 +265,7 @@ func move_and_slide(linear_velocity, floor_normal=Vector2(), slope_stop_min_velo
 			smoke.position = collision.position
 			smoke.emitting = true
 			get_node("/root/Node").add_child(smoke)
+			health -= 1
 
 		var cos_max_floor_angle = cos(floor_max_angle)
 		var floor_collision_dot = collision.normal.dot(floor_normal)
