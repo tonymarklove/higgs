@@ -42,6 +42,20 @@ var gravity_jump_action = GRAVJUMP_RELEASED
 var gravity_jump_charge = 1.0
 const GRAVITY_JUMP_MAXIMUM_TIME = 0.5
 
+var on_wall = false
+var on_floor = false
+var on_ceiling = false
+var floor_velocity = Vector2()
+
+func is_on_floor():
+	return self.on_floor
+
+func is_on_wall():
+	return self.on_wall
+
+func is_on_ceiling():
+	return self.on_ceiling
+			
 func clamp_and_normalize(input, a, b):
 	return clamp(input, a, b) / (b - a)
 
@@ -208,9 +222,58 @@ func _physics_process(delta):
 
 	$Camera2D.rotating = rotate_camera_with_player
 
+	var floor_normal = -gravity_vector() if gravity_mode == GRAVMODE_DIRECTION else Vector2(0,-1)
+
 	get_input(delta)
 	velocity += gravity_vector() * gravity_strength * delta
-	velocity = move_and_slide(velocity, -gravity_vector())
+	velocity = move_and_slide(velocity, floor_normal)
 
 	if rotate_to_follow_gravity:
 		rotate_to_gravity()
+
+func move_and_slide(linear_velocity, floor_normal=Vector2(), slope_stop_min_velocity=5, max_bounces=4, floor_max_angle=0.785398):
+	var motion = (floor_velocity + linear_velocity) * get_physics_process_delta_time();
+	var lv = linear_velocity
+
+	self.on_floor = false
+	self.on_ceiling = false
+	self.on_wall = false
+	floor_velocity = Vector2()
+
+	while(max_bounces):
+		var collision = move_and_collide(motion)
+
+		if !collision: break
+
+		var cos_max_floor_angle = cos(floor_max_angle)
+		var floor_collision_dot = collision.normal.dot(floor_normal)
+		var ceiling_collision_dot = -floor_collision_dot
+
+		if floor_collision_dot >= cos_max_floor_angle:
+			# On floor
+			self.on_floor = true
+			floor_velocity = collision.collider_velocity
+
+			var rel_v = lv - floor_velocity
+			var hor_v = rel_v - floor_normal * floor_normal.dot(rel_v);
+
+			if collision.travel.length() < 1 && hor_v.length() < slope_stop_min_velocity:
+				var gt = get_global_transform()
+				gt.origin -= collision.travel 
+				set_global_transform(gt)
+				return Vector2()
+		elif ceiling_collision_dot >= cos_max_floor_angle:
+			self.on_ceiling = true
+		else:
+			self.on_wall = true
+
+		var n = collision.normal
+		motion = collision.remainder.slide(n)
+		lv = lv.slide(n)
+
+		max_bounces -= 1
+
+		if motion.length() == 0:
+			break
+
+	return lv

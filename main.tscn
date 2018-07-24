@@ -13,6 +13,7 @@
 
 z_index = 1
 _sections_unfolded = [ "Z Index" ]
+rotate_to_follow_gravity = false
 
 [node name="Light2D" type="Light2D" parent="Player" index="3"]
 
@@ -22,8 +23,8 @@ texture = ExtResource( 3 )
 offset = Vector2( 0, 0 )
 texture_scale = 3.0
 color = Color( 1, 1, 1, 1 )
-energy = 0.5
-mode = 0
+energy = 1.0
+mode = 2
 range_height = 0.0
 range_z_min = -1024
 range_z_max = 1024
