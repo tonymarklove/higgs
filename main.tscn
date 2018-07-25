@@ -42,6 +42,7 @@ _sections_unfolded = [ "Range", "Shadow" ]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." index="2"]
 
+editor/display_folded = true
 layer = 1
 offset = Vector2( 0, 0 )
 rotation = 0.0
