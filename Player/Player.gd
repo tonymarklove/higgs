@@ -264,7 +264,7 @@ func move_and_slide(linear_velocity, floor_normal=Vector2(), slope_stop_min_velo
 			var smoke = smoke_emitter.instance()
 			smoke.position = collision.position
 			smoke.emitting = true
-			get_node("/root/Node").add_child(smoke)
+			get_node("/root/GameWorld").add_child(smoke)
 			health -= 1
 
 		var cos_max_floor_angle = cos(floor_max_angle)
