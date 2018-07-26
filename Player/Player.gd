@@ -60,7 +60,7 @@ func is_on_wall():
 
 func is_on_ceiling():
 	return self.on_ceiling
-			
+
 func clamp_and_normalize(input, a, b):
 	return clamp(input, a, b) / (b - a)
 
@@ -81,7 +81,7 @@ func gravity_change_from_input():
 
 	if Input.is_action_just_pressed('gravity_left'):
 		return -1
-	
+
 	if Input.is_action_just_pressed('gravity_up'):
 		return 2
 
@@ -89,7 +89,7 @@ func gravity_change_from_input():
 
 func rotating_camera_gravity_select():
 	var change = gravity_change_from_input()
-	
+
 	if change != 0:
 		gravity_select(gravity_index_from_offset(change))
 
@@ -99,7 +99,7 @@ func fixed_camera_gravity_select():
 
 	if Input.is_action_just_pressed('gravity_left'):
 		gravity_select(3)
-	
+
 	if Input.is_action_just_pressed('gravity_up'):
 		gravity_select(2)
 
@@ -204,7 +204,7 @@ func get_input(delta):
 
 			if is_on_floor() and jump:
 				velocity += gravity_vector() * jump_speed
-				
+
 			gravity_direction_select()
 
 		GRAVMODE_JUMP:
@@ -227,7 +227,7 @@ func rotate_to_gravity():
 func _physics_process(delta):
 	game_time += delta
 
-	$Camera2D.rotating = rotate_camera_with_player
+	$Camera.rotating = rotate_camera_with_player
 
 	var floor_normal = -gravity_vector() if gravity_mode == GRAVMODE_DIRECTION else Vector2(0,-1)
 
@@ -281,7 +281,7 @@ func move_and_slide(linear_velocity, floor_normal=Vector2(), slope_stop_min_velo
 
 			if collision.travel.length() < 1 && hor_v.length() < slope_stop_min_velocity:
 				var gt = get_global_transform()
-				gt.origin -= collision.travel 
+				gt.origin -= collision.travel
 				set_global_transform(gt)
 				return Vector2()
 		elif ceiling_collision_dot >= cos_max_floor_angle:
