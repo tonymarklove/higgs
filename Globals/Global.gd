@@ -3,7 +3,7 @@ extends Node
 func _ready():
 	OS.center_window()
 
-func goto_scene(path, teleport_to_location):
+func goto_scene(path, teleport_to_location=null):
 	call_deferred("_deferred_goto_scene", path, teleport_to_location)
 
 func _deferred_goto_scene(path, teleport_to_location):
