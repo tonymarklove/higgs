@@ -1,5 +1,7 @@
 extends Node
 
+const TILE_SIZE = 50
+
 func _ready():
 	OS.center_window()
 
